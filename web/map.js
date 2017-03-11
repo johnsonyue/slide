@@ -10,6 +10,7 @@ get_map_func();
 function get_map_func(){
     var url = "./caida.json";
     xmlHttpRequest = new XMLHttpRequest();
+    xmlHttpRequest.open("GET", url, true);
     xmlHttpRequest.onreadystatechange = map_places_ready;
     xmlHttpRequest.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     xmlHttpRequest.send();

@@ -1,12 +1,11 @@
 import json
 import time
-
-from manager import http
+import http
 
 if __name__ == '__main__':
 	HOST_NAME = config["manager"]["host_name"]
 	PORT_NUMBER = config["manager"]["port_number"]
-	httpd = http.Server( (HOST_NAME, PORT_NUMBER), http.Handler, config )
+	httpd = http.Server( (HOST_NAME, PORT_NUMBER), http.Handler )
 	print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
 	try:
 		httpd.serve_forever()
