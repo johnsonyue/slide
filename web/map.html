@@ -1,31 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
+<meta charset="utf-8">
+<style>
 
-    <title>Geoloc Distribution</title>
+body {
+  background: #fcfcfa;
+}
 
-    <!-- Bootstrap core CSS -->
-    <link href="bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
+.stroke {
+  fill: none;
+  stroke: #000;
+  stroke-width: 3px;
+}
 
-    <!-- Custom styles for this template -->
-    <link href="bootstrap-3.3.6-dist/css/dashboard.css" rel="stylesheet">
-    <link href="map.css" rel="stylesheet">
-</head>
+.fill {
+  fill: #fff;
+}
 
+.graticule {
+  fill: none;
+  stroke: #777;
+  stroke-width: .5px;
+  stroke-opacity: .5;
+}
+
+.land {
+  fill: #222;
+}
+
+.boundary {
+  fill: none;
+  stroke: #fff;
+  stroke-width: .5px;
+}
+
+</style>
 <body>
-<script src="bootstrap-3.3.6-dist/js/jquery.min.js"></script>
-<script src="bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
-<script src="bootstrap-3.3.6-dist/js/d3.min.js"></script>
-<script src="bootstrap-3.3.6-dist/js/queue.v1.min.js"></script>
-<script src="bootstrap-3.3.6-dist/js/topojson.v0.min.js"></script>
+<script src="bootstrap-3.3.6-dist/js/d3.v3.min.js"></script>
+<script src="bootstrap-3.3.6-dist/js/projection.v0.min.js"></script>
+<script src="bootstrap-3.3.6-dist/js/topojson.v1.min.js"></script>
+<script>
+load_map("./caida.json");
+load_map("./iplane.json");
+load_map("./lg.json");
+function load_map(file_name){
+var width = 600,
+    height = 400;
 
-<div class="panel-body" id="globe-panel"><div class="map">
-    <svg>
-	<rect id="frame" x="0" y="0" style="fill:blue; stroke:black; stroke-width:1; fill-opacity:0.1; stroke-opacity:0.9"></rect>
-    </svg>
-</div></div>
-<script src="map.js"></script>
+var color = d3.scale.category10();
 
-</body>
-</html>
+var projection = d3.geo.kavrayskiy7()
+    .scale(100)
+    .translate([width / 2, height / 2])
+    .precision(.1);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var graticule = d3.geo.graticule();
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+svg.append("defs").append("path")
+    .datum({type: "Sphere"})
+    .attr("id", "sphere")
+    .attr("d", path);
+
+svg.append("use")
+    .attr("class", "stroke")
+    .attr("xlink:href", "#sphere");
+
+svg.append("use")
+    .attr("class", "fill")
+    .attr("xlink:href", "#sphere");
+
+svg.append("path")
+    .datum(graticule)
+    .attr("class", "graticule")
+    .attr("d", path);
+
+d3.json("./world-50m.json", function(error, world) {
+  if (error) throw error;
+
+  var countries = topojson.feature(world, world.objects.countries).features,
+      neighbors = topojson.neighbors(world.objects.countries.geometries);
+
+  svg.selectAll(".country")
+      .data(countries)
+    .enter().insert("path", ".graticule")
+      .attr("class", "country")
+      .attr("d", path)
+      .style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
+
+  svg.insert("path", ".graticule")
+      .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
+      .attr("class", "boundary")
+      .attr("d", path);
+});
+
+d3.json(file_name, function(error, nodes) {
+  if (error) throw error;
+  
+  var node_list=[];
+  nodes.forEach(function(e,i,a){
+    var feature = { "type": "Feature", "properties": {"index": i}, "geometry": { "type": "Point", "coordinates": [e.lon,e.lat] }};
+    node_list.push(feature);
+  });
+  
+svg.selectAll("circle")
+.data(node_list).enter()
+.append("circle")
+.attr("cx", function(d){
+        return projection(d.geometry.coordinates)[0];
+    })
+.attr("cy",function(d){
+        return projection(d.geometry.coordinates)[1];
+    })
+.attr("r", "1")
+.attr("fill", "black");
+});
+
+d3.select(self.frameElement).style("height", height + "px");
+}
+
+</script>
