@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>Geoloc Distribution</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap-3.3.6-dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="bootstrap-3.3.6-dist/css/dashboard.css" rel="stylesheet">
+    <link href="map.css" rel="stylesheet">
+</head>
+
+<body>
+<script src="bootstrap-3.3.6-dist/js/jquery.min.js"></script>
+<script src="bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+<script src="bootstrap-3.3.6-dist/js/d3.min.js"></script>
+<script src="bootstrap-3.3.6-dist/js/queue.v1.min.js"></script>
+<script src="bootstrap-3.3.6-dist/js/topojson.v0.min.js"></script>
+
+<div class="panel-body" id="globe-panel"><div class="map">
+    <svg>
+	<rect id="frame" x="0" y="0" style="fill:blue; stroke:black; stroke-width:1; fill-opacity:0.1; stroke-opacity:0.9"></rect>
+    </svg>
+</div></div>
+<script src="map.js"></script>
+
+</body>
+</html>
