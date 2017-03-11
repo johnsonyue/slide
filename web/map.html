@@ -1,6 +1,7 @@
 <!DOCTYPE html>
+<head>
 <meta charset="utf-8">
-<style>
+<style type="text/css">
 
 body {
   background: #fcfcfa;
@@ -32,10 +33,44 @@ body {
   stroke: #fff;
   stroke-width: .5px;
 }
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
 
 </style>
+</head>
 <body>
+<div>
+<table class="table table-bordered" id="table">
+<thead>
+<th>Name</th>
+<th>Longitude</th>
+<th>Latitude</th>
+<th>ASN</th>
+<th>Country</th>
+<th>City</th>
+<th>Comment</th>
+</thead>
+<tbody>
+<tr></tr>
+</tbody>
+</table>
+</div>
 <script src="bootstrap-3.3.6-dist/js/d3.v3.min.js"></script>
+<script src="bootstrap-3.3.6-dist/js/jquery.min.js"></script>
 <script src="bootstrap-3.3.6-dist/js/projection.v0.min.js"></script>
 <script src="bootstrap-3.3.6-dist/js/topojson.v1.min.js"></script>
 <script>
@@ -104,7 +139,7 @@ d3.json(file_name, function(error, nodes) {
   
   var node_list=[];
   nodes.forEach(function(e,i,a){
-    var feature = { "type": "Feature", "properties": {"index": i}, "geometry": { "type": "Point", "coordinates": [e.lon,e.lat] }};
+    var feature = { "type": "Feature", "properties": {"index": i}, "geometry": { "type": "Point", "coordinates": [e.lon,e.lat] }, "data":e};
     node_list.push(feature);
   });
   
@@ -118,7 +153,19 @@ svg.selectAll("circle")
         return projection(d.geometry.coordinates)[1];
     })
 .attr("r", "1")
-.attr("fill", "black");
+.attr("fill", "black")
+.on("mouseover",function(d){
+    var tbl = $("#table");
+    tbl.find("tbody td").remove();
+    var row = tbl.find("tbody").append("<tr></tr>");
+    row.append('<td>'+ d.data.info.name+'</td>');
+    row.append('<td>'+ d.data.lon+'</td>');
+    row.append('<td>'+ d.data.lat+'</td>');
+    row.append('<td>'+ d.data.info.asn+'</td>');
+    row.append('<td>'+ d.data.info.country+'</td>');
+    row.append('<td>'+ d.data.info.city+'</td>');
+    row.append('<td>'+ d.data.info.comment+'</td>');
+});
 });
 
 d3.select(self.frameElement).style("height", height + "px");

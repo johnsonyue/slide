@@ -58,7 +58,7 @@ def iplane():
 			fields=line.split('|')
 			lon=fields[1]
 			lat=fields[2]
-			if (lon=="" or lat==""):
+			if (lon=="" or lat=="" or lon=="*" or lat==""):
 				continue
 			name=fields[0]
 			info={
@@ -89,7 +89,7 @@ def lg():
 			fields=line.split('|')
 			lon=fields[3]
 			lat=fields[4]
-			if (lon=="" or lat==""):
+			if (lon=="" or lat=="" or lon=="*" or lat=="*"):
 				continue
 			name=fields[0]
 			asn=fields[0]
