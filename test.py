@@ -1,4 +1,4 @@
 from geoip import geoip
 
 geoip = geoip.geoip_helper()
-print geoip.query("202.118.236.229")
+print geoip.query("105.103.45.175")

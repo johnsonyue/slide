@@ -37,7 +37,7 @@ def main(argv):
 			lat = next(db[country].itervalues())["lat"]
 			lon = next(db[country].itervalues())["lon"]
 		
-		print "%s|%s|%s|%s" % (country, city, lat, lon)
+		print "%s|%s|%s" % (line.strip('\n').strip(' '), lat, lon)
 
 if __name__ == "__main__":
 	main(sys.argv)
