@@ -3,8 +3,8 @@ import time
 import http
 
 if __name__ == '__main__':
-	HOST_NAME = config["manager"]["host_name"]
-	PORT_NUMBER = config["manager"]["port_number"]
+	HOST_NAME = "172.17.0.2"
+	PORT_NUMBER = 80
 	httpd = http.Server( (HOST_NAME, PORT_NUMBER), http.Handler )
 	print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
 	try:
