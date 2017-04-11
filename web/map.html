@@ -25,7 +25,7 @@ body {
 }
 
 .land {
-  fill: #222;
+  fill: #fff;
 }
 
 .boundary {
@@ -126,7 +126,9 @@ d3.json("./world-50m.json", function(error, world) {
     .enter().insert("path", ".graticule")
       .attr("class", "country")
       .attr("d", path)
-      .style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
+      //.style("fill", function(d, i) { return color(d.color = d3.max(neighbors[i], function(n) { return countries[n].color; }) + 1 | 0); });
+      .style("fill", function(d, i) { return "#83E1FD"; });
+  //console.log(color(0));
 
   svg.insert("path", ".graticule")
       .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
@@ -153,7 +155,7 @@ svg.selectAll("circle")
         return projection(d.geometry.coordinates)[1];
     })
 .attr("r", "1")
-.attr("fill", "black")
+.attr("fill", "red")
 .on("mouseover",function(d){
     var tbl = $("#table");
     tbl.find("tbody td").remove();
